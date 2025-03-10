@@ -96,6 +96,34 @@ Array* add_arrays(Array *arr1, Array *arr2) {
     return result_array;
 }
 
+MultiDimensionalArray* transpose_multidim_array(MultiDimensionalArray *arr) {
+    MultiDimensionalArray* multi_result = malloc(sizeof(MultiDimensionalArray)); 
+    multidim_array_init(multi_result);    
+    int i = 0;
+    while (i < arr -> data[0] -> size) {
+        Array* result = malloc(sizeof(Array)); 
+        array_init(result);
+        for (int j = 0; j < arr -> size; j++) {
+             array_add(result, arr -> data[j] -> data[i]); 
+        } 
+        multidim_array_add(multi_result, result); 
+        i += 1;
+    }
+    return multi_result;
+} 
+
+MultiDimensionalArray* multiply_arrays_as_matrix(MultiDimensionalArray *arr1, MultiDimensionalArray * arr2) {
+    MultiDimensionalArray* multi_result = malloc(sizeof(MultiDimensionalArray));
+    multidim_array_init(multi_result);
+    for (int i = 0; i < arr1 -> size; i++) {
+        Array *result = malloc(sizeof(Array));
+        array_init(result);
+        for (int j = 0; j < arr1 -> size; j++) {
+            arr -> data[i]
+        } 
+    }
+}
+
 int main() {
     Array arr1;
     Array arr2; 
@@ -108,5 +136,6 @@ int main() {
     multidim_array_add(&mda, &arr1); 
     multidim_array_add(&mda, &arr2); 
     multidim_array_print(&mda);
+    multidim_array_print(transpose_multidim_array(&mda));
     // multidim_array_print(multiply_two_multidimensional_arrays(&mda, &mda)); // Uncomment this to print result
 }

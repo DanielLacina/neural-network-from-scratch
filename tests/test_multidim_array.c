@@ -15,11 +15,11 @@ void multidim_array_free(MultiDimensionalArray *mda) {
 }
 
 void test_matrix_multiplication_basic() {
-    MultiDimensionalArray arr1, arr2, *result;
-    multidim_array_init(&arr1);
-    multidim_array_init(&arr2);
+    MultiDimensionalArray mda1, mda2, *result;
+    multidim_array_init(&mda1);
+    multidim_array_init(&mda2);
 
-    // Creating 2x2 matrix arr1 = {{1, 2}, {3, 4}}
+    // Creating 2x2 matrix mda1 = {{1, 2}, {3, 4}}
     Array row1, row2;
     array_init(&row1);
     array_init(&row2);
@@ -27,10 +27,10 @@ void test_matrix_multiplication_basic() {
     array_add(&row1, 2);
     array_add(&row2, 3);
     array_add(&row2, 4);
-    multidim_array_add(&arr1, &row1);
-    multidim_array_add(&arr1, &row2);
+    multidim_array_add(&mda1, &row1);
+    multidim_array_add(&mda1, &row2);
 
-    // Creating 2x2 matrix arr2 = {{5, 6}, {7, 8}}
+    // Creating 2x2 matrix mda2 = {{5, 6}, {7, 8}}
     Array row3, row4;
     array_init(&row3);
     array_init(&row4);
@@ -38,11 +38,11 @@ void test_matrix_multiplication_basic() {
     array_add(&row3, 6);
     array_add(&row4, 7);
     array_add(&row4, 8);
-    multidim_array_add(&arr2, &row3);
-    multidim_array_add(&arr2, &row4);
+    multidim_array_add(&mda2, &row3);
+    multidim_array_add(&mda2, &row4);
 
     // Perform matrix multiplication
-    result = multiply_arrays_as_matrix(&arr1, &arr2);
+    result = multiply_arrays_as_matrix(&mda1, &mda2);
 
     // Expected result = {{19, 22}, {43, 50}}
     assert(result->data[0]->data[0] == 19);
@@ -99,12 +99,12 @@ void test_matrix_multiplication_identity() {
 }
 
 void test_matrix_multiplication_empty() {
-    MultiDimensionalArray arr1, arr2, *result;
-    multidim_array_init(&arr1);
-    multidim_array_init(&arr2);
+    MultiDimensionalArray mda1, mda2, *result;
+    multidim_array_init(&mda1);
+    multidim_array_init(&mda2);
 
     // Empty matrices
-    result = multiply_arrays_as_matrix(&arr1, &arr2);
+    result = multiply_arrays_as_matrix(&mda1, &mda2);
 
     // Expecting an empty result
     assert(result->size == 0);
@@ -116,11 +116,11 @@ void test_matrix_multiplication_empty() {
 }
 
 void test_matrix_multiplication_rectangular() {
-    MultiDimensionalArray arr1, arr2, *result;
-    multidim_array_init(&arr1);
-    multidim_array_init(&arr2);
+    MultiDimensionalArray mda1, mda2, *result;
+    multidim_array_init(&mda1);
+    multidim_array_init(&mda2);
 
-    // Creating 2x3 matrix arr1 = {{1, 2, 3}, {4, 5, 6}}
+    // Creating 2x3 matrix mda1 = {{1, 2, 3}, {4, 5, 6}}
     Array row1, row2;
     array_init(&row1);
     array_init(&row2);
@@ -130,10 +130,10 @@ void test_matrix_multiplication_rectangular() {
     array_add(&row2, 4);
     array_add(&row2, 5);
     array_add(&row2, 6);
-    multidim_array_add(&arr1, &row1);
-    multidim_array_add(&arr1, &row2);
+    multidim_array_add(&mda1, &row1);
+    multidim_array_add(&mda1, &row2);
 
-    // Creating 3x2 matrix arr2 = {{7, 8}, {9, 10}, {11, 12}}
+    // Creating 3x2 matrix mda2 = {{7, 8}, {9, 10}, {11, 12}}
     Array row3, row4, row5;
     array_init(&row3);
     array_init(&row4);
@@ -144,12 +144,12 @@ void test_matrix_multiplication_rectangular() {
     array_add(&row4, 10);
     array_add(&row5, 11);
     array_add(&row5, 12);
-    multidim_array_add(&arr2, &row3);
-    multidim_array_add(&arr2, &row4);
-    multidim_array_add(&arr2, &row5);
+    multidim_array_add(&mda2, &row3);
+    multidim_array_add(&mda2, &row4);
+    multidim_array_add(&mda2, &row5);
 
     // Perform multiplication (2x3 * 3x2 = 2x2)
-    result = multiply_arrays_as_matrix(&arr1, &arr2);
+    result = multiply_arrays_as_matrix(&mda1, &mda2);
 
     // Expected result: {{58, 64}, {139, 154}}
     assert(result->data[0]->data[0] == 58);
@@ -163,7 +163,7 @@ void test_matrix_multiplication_rectangular() {
     multidim_array_free(result);
 }
 
-int main() {
+float main() {
     test_matrix_multiplication_basic();
     test_matrix_multiplication_identity();
     test_matrix_multiplication_empty();

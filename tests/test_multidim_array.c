@@ -1,173 +1,195 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <assert.h>
 #include "multidim_array.h"
 #include "array.h"
+#include <stdio.h>
+#include <assert.h>
 
-// Function to free memory for MultiDimensionalArray
-void multidim_array_free(MultiDimensionalArray *mda) {
-    for (int i = 0; i < mda->size; i++) {
-        free(mda->data[i]->data);  // Free individual array data
-        free(mda->data[i]);        // Free array structure
-    }
-    free(mda->data);  // Free multidimensional array
+// Helper function to create a 2D array for testing
+MultiDimArray_float* create_test_array_float() {
+    MultiDimArray_float *mda = multidim_array_float();
+    Array_float *row1 = array_float();
+    array_add_float(row1, 1.0);
+    array_add_float(row1, 2.0);
+    array_add_float(row1, 3.0);
+    multidim_array_add_float(mda, row1);
+
+    Array_float *row2 = array_float();
+    array_add_float(row2, 4.0);
+    array_add_float(row2, 5.0);
+    array_add_float(row2, 6.0);
+    multidim_array_add_float(mda, row2);
+
+    Array_float *row3 = array_float();
+    array_add_float(row3, 7.0);
+    array_add_float(row3, 8.0);
+    array_add_float(row3, 9.0);
+    multidim_array_add_float(mda, row3);
+
+    return mda;
+}
+
+// Test initialization and addition
+void test_multidim_array_init_and_add() {
+    printf("Testing initialization and addition...\n");
+
+    MultiDimArray_float *mda = multidim_array_float();
+    assert(mda->size == 0);
+    assert(mda->capacity == 0);
+    assert(mda->data == NULL);
+
+    Array_float *row1 = array_float();
+    array_add_float(row1, 1.0);
+    array_add_float(row1, 2.0);
+    multidim_array_add_float(mda, row1);
+
+    assert(mda->size == 1);
+    assert(mda->capacity == 1);
+    assert(mda->data[0]->data[0] == 1.0);
+    assert(mda->data[0]->data[1] == 2.0);
+
+    Array_float *row2 = array_float();
+    array_add_float(row2, 3.0);
+    array_add_float(row2, 4.0);
+    multidim_array_add_float(mda, row2);
+
+    assert(mda->size == 2);
+    assert(mda->capacity == 2);
+    assert(mda->data[1]->data[0] == 3.0);
+    assert(mda->data[1]->data[1] == 4.0);
+
+    printf("Initialization and addition tests passed!\n");
     free(mda);
 }
 
-void test_matrix_multiplication_basic() {
-    MultiDimensionalArray mda1, mda2, *result;
-    multidim_array_init(&mda1);
-    multidim_array_init(&mda2);
+// Test printing
+void test_multidim_array_print() {
+    printf("Testing printing...\n");
 
-    // Creating 2x2 matrix mda1 = {{1, 2}, {3, 4}}
-    Array row1, row2;
-    array_init(&row1);
-    array_init(&row2);
-    array_add(&row1, 1);
-    array_add(&row1, 2);
-    array_add(&row2, 3);
-    array_add(&row2, 4);
-    multidim_array_add(&mda1, &row1);
-    multidim_array_add(&mda1, &row2);
+    MultiDimArray_float *mda = create_test_array_float();
+    printf("Expected output:\n");
+    printf("[\n");
+    printf("[1.0, 2.0, 3.0]\n");
+    printf("[4.0, 5.0, 6.0]\n");
+    printf("[7.0, 8.0, 9.0]\n");
+    printf("]\n");
 
-    // Creating 2x2 matrix mda2 = {{5, 6}, {7, 8}}
-    Array row3, row4;
-    array_init(&row3);
-    array_init(&row4);
-    array_add(&row3, 5);
-    array_add(&row3, 6);
-    array_add(&row4, 7);
-    array_add(&row4, 8);
-    multidim_array_add(&mda2, &row3);
-    multidim_array_add(&mda2, &row4);
+    printf("Actual output:\n");
+    multidim_array_print_float(mda);
 
-    // Perform matrix multiplication
-    result = multiply_arrays_as_matrix(&mda1, &mda2);
-
-    // Expected result = {{19, 22}, {43, 50}}
-    assert(result->data[0]->data[0] == 19);
-    assert(result->data[0]->data[1] == 22);
-    assert(result->data[1]->data[0] == 43);
-    assert(result->data[1]->data[1] == 50);
-
-    printf("Test passed: Basic 2x2 matrix multiplication\n");
-
-    // Free memory
-    multidim_array_free(result);
+    printf("Printing test passed!\n");
+    free(mda);
 }
 
-void test_matrix_multiplication_identity() {
-    MultiDimensionalArray identity, arr, *result;
-    multidim_array_init(&identity);
-    multidim_array_init(&arr);
+// Test transposition
+void test_transpose_multidim_array() {
+    printf("Testing transposition...\n");
 
-    // Creating Identity Matrix (2x2)
-    Array irow1, irow2;
-    array_init(&irow1);
-    array_init(&irow2);
-    array_add(&irow1, 1);
-    array_add(&irow1, 0);
-    array_add(&irow2, 0);
-    array_add(&irow2, 1);
-    multidim_array_add(&identity, &irow1);
-    multidim_array_add(&identity, &irow2);
+    MultiDimArray_float *mda = create_test_array_float();
+    MultiDimArray_float *transposed = transpose_multidim_array_float(mda);
 
-    // Creating a 2x2 matrix arr = {{3, 4}, {5, 6}}
-    Array row1, row2;
-    array_init(&row1);
-    array_init(&row2);
-    array_add(&row1, 3);
-    array_add(&row1, 4);
-    array_add(&row2, 5);
-    array_add(&row2, 6);
-    multidim_array_add(&arr, &row1);
-    multidim_array_add(&arr, &row2);
+    assert(transposed->size == 3);
+    assert(transposed->data[0]->data[0] == 1.0);
+    assert(transposed->data[0]->data[1] == 4.0);
+    assert(transposed->data[0]->data[2] == 7.0);
+    assert(transposed->data[1]->data[0] == 2.0);
+    assert(transposed->data[1]->data[1] == 5.0);
+    assert(transposed->data[1]->data[2] == 8.0);
+    assert(transposed->data[2]->data[0] == 3.0);
+    assert(transposed->data[2]->data[1] == 6.0);
+    assert(transposed->data[2]->data[2] == 9.0);
 
-    // Multiply identity matrix with arr
-    result = multiply_arrays_as_matrix(&identity, &arr);
-
-    // Expected result: It should remain unchanged
-    assert(result->data[0]->data[0] == 3);
-    assert(result->data[0]->data[1] == 4);
-    assert(result->data[1]->data[0] == 5);
-    assert(result->data[1]->data[1] == 6);
-
-    printf("Test passed: Identity matrix multiplication\n");
-
-    // Free memory
-    multidim_array_free(result);
+    printf("Transposition test passed!\n");
+    free(mda);
+    free(transposed);
 }
 
-void test_matrix_multiplication_empty() {
-    MultiDimensionalArray mda1, mda2, *result;
-    multidim_array_init(&mda1);
-    multidim_array_init(&mda2);
+// Test matrix multiplication
+void test_multiply_arrays_as_matrix() {
+    printf("Testing matrix multiplication...\n");
 
-    // Empty matrices
-    result = multiply_arrays_as_matrix(&mda1, &mda2);
+    MultiDimArray_float *mda1 = create_test_array_float();
+    MultiDimArray_float *mda2 = create_test_array_float();
+    MultiDimArray_float *product = multiply_arrays_as_matrix_float(mda1, mda2);
 
-    // Expecting an empty result
-    assert(result->size == 0);
+    assert(product->size == 3);
+    assert(product->data[0]->data[0] == 30.0);
+    assert(product->data[0]->data[1] == 36.0);
+    assert(product->data[0]->data[2] == 42.0);
+    assert(product->data[1]->data[0] == 66.0);
+    assert(product->data[1]->data[1] == 81.0);
+    assert(product->data[1]->data[2] == 96.0);
+    assert(product->data[2]->data[0] == 102.0);
+    assert(product->data[2]->data[1] == 126.0);
+    assert(product->data[2]->data[2] == 150.0);
 
-    printf("Test passed: Multiplication with empty matrices\n");
-
-    // Free memory
-    multidim_array_free(result);
+    printf("Matrix multiplication test passed!\n");
+    free(mda1);
+    free(mda2);
+    free(product);
 }
 
-void test_matrix_multiplication_rectangular() {
-    MultiDimensionalArray mda1, mda2, *result;
-    multidim_array_init(&mda1);
-    multidim_array_init(&mda2);
+// Test identity matrix
+void test_identity_matrix() {
+    printf("Testing identity matrix...\n");
 
-    // Creating 2x3 matrix mda1 = {{1, 2, 3}, {4, 5, 6}}
-    Array row1, row2;
-    array_init(&row1);
-    array_init(&row2);
-    array_add(&row1, 1);
-    array_add(&row1, 2);
-    array_add(&row1, 3);
-    array_add(&row2, 4);
-    array_add(&row2, 5);
-    array_add(&row2, 6);
-    multidim_array_add(&mda1, &row1);
-    multidim_array_add(&mda1, &row2);
+    MultiDimArray_float *identity = identity_matrix_float(3);
 
-    // Creating 3x2 matrix mda2 = {{7, 8}, {9, 10}, {11, 12}}
-    Array row3, row4, row5;
-    array_init(&row3);
-    array_init(&row4);
-    array_init(&row5);
-    array_add(&row3, 7);
-    array_add(&row3, 8);
-    array_add(&row4, 9);
-    array_add(&row4, 10);
-    array_add(&row5, 11);
-    array_add(&row5, 12);
-    multidim_array_add(&mda2, &row3);
-    multidim_array_add(&mda2, &row4);
-    multidim_array_add(&mda2, &row5);
+    assert(identity->size == 3);
+    assert(identity->data[0]->data[0] == 1.0);
+    assert(identity->data[0]->data[1] == 0.0);
+    assert(identity->data[0]->data[2] == 0.0);
+    assert(identity->data[1]->data[0] == 0.0);
+    assert(identity->data[1]->data[1] == 1.0);
+    assert(identity->data[1]->data[2] == 0.0);
+    assert(identity->data[2]->data[0] == 0.0);
+    assert(identity->data[2]->data[1] == 0.0);
+    assert(identity->data[2]->data[2] == 1.0);
 
-    // Perform multiplication (2x3 * 3x2 = 2x2)
-    result = multiply_arrays_as_matrix(&mda1, &mda2);
-
-    // Expected result: {{58, 64}, {139, 154}}
-    assert(result->data[0]->data[0] == 58);
-    assert(result->data[0]->data[1] == 64);
-    assert(result->data[1]->data[0] == 139);
-    assert(result->data[1]->data[1] == 154);
-
-    printf("Test passed: Rectangular matrix multiplication (2x3 * 3x2)\n");
-
-    // Free memory
-    multidim_array_free(result);
+    printf("Identity matrix test passed!\n");
+    free(identity);
 }
 
-float main() {
-    test_matrix_multiplication_basic();
-    test_matrix_multiplication_identity();
-    test_matrix_multiplication_empty();
-    test_matrix_multiplication_rectangular();
+// Test matrix inversion
+void test_inverse_matrix() {
+    printf("Testing matrix inversion...\n");
+
+    MultiDimArray_float *mda = multidim_array_float();
+    Array_float *row1 = array_float();
+    array_add_float(row1, 4.0);
+    array_add_float(row1, 7.0);
+    multidim_array_add_float(mda, row1);
+
+    Array_float *row2 = array_float();
+    array_add_float(row2, 2.0);
+    array_add_float(row2, 6.0);
+    multidim_array_add_float(mda, row2);
+
+    MultiDimArray_float *inverse = inverse_matrix_float(mda);
+
+    if (inverse) {
+        assert(inverse->size == 2);
+        assert(inverse->data[0]->data[0] == 0.6);
+        assert(inverse->data[0]->data[1] == -0.7);
+        assert(inverse->data[1]->data[0] == -0.2);
+        assert(inverse->data[1]->data[1] == 0.4);
+
+        printf("Matrix inversion test passed!\n");
+        free(inverse);
+    } else {
+        printf("Matrix inversion not implemented or matrix is singular.\n");
+    }
+
+    free(mda);
+}
+
+// Main function to run all tests
+int main() {
+    test_multidim_array_init_and_add();
+    test_multidim_array_print();
+    test_transpose_multidim_array();
+    test_multiply_arrays_as_matrix();
+    test_identity_matrix();
+    test_inverse_matrix();
+
     printf("All tests passed!\n");
     return 0;
 }

@@ -1,12 +1,12 @@
+#ifndef HASHMAP_H  
+#define HASHMAP_H
+
+#include <stdio.h>
+#include <stdlib.h>
 #include "array.h" 
 
-// typedef struct {
-//     char *key;
-//     char *value;
-//     Node *next;
-// } Node; 
-
-// typedef struct {
-//     Array *data;
-// } HashMap;
-
+#define DEFINE_HASHMAP(TYPE) \
+typedef struct {\
+    Array_##TYPE *data;\
+} HashMap;\
+#endif

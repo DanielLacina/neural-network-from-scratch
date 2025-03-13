@@ -1,4 +1,6 @@
 #include "multidim_array.h"
+#include <stdio.h>
+#include <stdbool.h>
 
 void multidim_array_init(MultiDimensionalArray *mda) {
     mda->data = NULL;
@@ -111,40 +113,38 @@ MultiDimensionalArray* identity_matrix(int size) {
     } 
     return multi_result;
 }
-MultiDimensionalArray* find_inverse_matrix(MultiDimensionalArray *mda) {
-    if (mda -> size == 0 || mda -> data[0] -> size == 0) {
-        return multidim_array(); 
-    }
-    if (mda -> size != mda -> data[0] -> size) {
-        return NULL;
-    } 
-    MultiDimensionalArray* i_mda = identity_matrix(mda -> size);
-    MultiDimensionalArray* cloned_mda = cloned_multidim_array(mda);
+
+void swap_rows(MultiDimensionalArray *mda, int row1, int row2) {
+    Array* temp = mda -> data[row1];
+    mda -> data[row1] = mda -> data[row2];
+    mda -> data[row2] = temp;
+}
+
+MultiDimensionalArray* inverse_matrix(MultiDimensionalArray *mda) {
+    MultiDimensionalArray* i_mda = identity_matrix(mda -> size); 
+    MultiDimensionalArray* mda_copy = cloned_multidim_array(mda);
     for (int i = 0; i < mda -> size; i++) {
-        for (int j = 0; j < mda -> size; j++) {
-            float cur_cell_value = cloned_mda -> data[j] -> data[i];
-            if (i == j && cur_cell_value != 0) {
-               cloned_mda -> data[i] = multiply_array_by_scalar(cloned_mda -> data[i], 1 / cur_cell_value);
-               i_mda -> data[i] = multiply_array_by_scalar(i_mda -> data[i], 1 / cur_cell_value);
-            }
-            else if (i != j && cur_cell_value == 0) {}
-            else {
-                for (int h = 0; h < mda -> size; h++) { 
-                    // h is the row that is being added to the current row  
-                    float row_value = cloned_mda -> data[h] -> data[i]; 
-                    if (row_value != 0 && h != j) {
-                        float scalar;
-                        if (i == j) {
-                            scalar = (cur_cell_value - 1)/-row_value;
-                        } else {
-                            scalar = cur_cell_value/-row_value;
-                        }
-                        cloned_mda -> data[i] = add_arrays(cloned_mda -> data[i], multiply_array_by_scalar(cloned_mda -> data[h], scalar));  
-                        i_mda -> data[i] = add_arrays(i_mda -> data[i], multiply_array_by_scalar(i_mda -> data[h], scalar));
-                        break;
-                    } 
-                }
-            }  
+        int pivet_row_i = i;
+        while (pivet_row_i < mda_copy -> size &&  mda_copy -> data[pivet_row_i] -> data[i] == 0) {
+            pivet_row_i++;
+        }
+        if (pivet_row_i == mda_copy -> size) {
+            return NULL;
+        }
+        if (pivet_row_i != i) {
+            swap_rows(mda_copy, pivet_row_i, i);   
+            swap_rows(i_mda, pivet_row_i, i);
+        }
+        float pivet_value = mda_copy -> data[i] -> data[i];
+        mda_copy -> data[i] = multiply_array_by_scalar(mda_copy -> data[i], 1/pivet_value);
+        i_mda -> data[i] = multiply_array_by_scalar(i_mda -> data[i], 1/pivet_value);
+        for (int j = 0; j < mda_copy -> size; j++) {
+           if (j != i) {
+               float factor = mda_copy -> data[j] -> data[i];  
+               mda_copy -> data[j] = add_arrays(mda_copy -> data[j], multiply_array_by_scalar(mda_copy -> data[i], -factor));
+               i_mda -> data[j] = add_arrays(i_mda -> data[j], multiply_array_by_scalar(i_mda -> data[i], -factor));
+           }   
         }
     }
+    return i_mda;
 }

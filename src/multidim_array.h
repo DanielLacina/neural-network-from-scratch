@@ -23,5 +23,6 @@ void multidim_array_add(MultiDimensionalArray *mda, Array *inner_array);
 MultiDimensionalArray* transpose_multidim_array(MultiDimensionalArray *arr);
 MultiDimensionalArray* multiply_arrays_as_matrix(MultiDimensionalArray *mda1, MultiDimensionalArray * mda2);
 MultiDimensionalArray* identity_matrix(int size);
+MultiDimensionalArray* inverse_matrix(MultiDimensionalArray *mda);
 
 #endif

@@ -13,6 +13,13 @@ Array *array() {
     return array;
 }
 
+Array* cloned_array(Array *arr) {
+    Array* cloned_arr = array(); 
+    for (int i = 0; i < arr->size; i++) {
+        array_add(cloned_arr, arr->data[i]);  
+    }
+    return cloned_arr;
+}
 void array_add(Array *arr, float value) {
     if (arr->size == arr->capacity) {
         arr->capacity = arr->capacity == 0 ? 1 : arr->capacity * 2; 

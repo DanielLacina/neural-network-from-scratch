@@ -90,4 +90,3 @@
 // Define arrays for float, int, and char
 DEFINE_ARRAY(float)
 DEFINE_ARRAY(int)
-DEFINE_ARRAY(char)

@@ -1,4 +1,5 @@
 #include "hashmap.h"
+#include "array.h"
 
 // Define the Node function
 #define DEFINE_NODE(Key_Type, Value_Type) \
@@ -157,3 +158,8 @@ size_t hash_function_string_t(const char *key, size_t capacity) {
 bool compare_key_string_t(const char *key1, const char *key2) {
     return strcmp(key1, key2) == 0;
 }     
+
+DEFINE_NODE(string_t, Array_float)
+DEFINE_NODE_ARRAY(string_t, Array_float)
+DEFINE_HASHMAP(string_t, Array_float)
+DEFINE_HASHMAP_CRUD_OPERATIONS(string_t, Array_float)

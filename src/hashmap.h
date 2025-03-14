@@ -5,7 +5,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
+#include "array.h"
 
+typedef const char* string_t;
 // Declare the Node type
 #define DECLARE_NODE(Key_Type, Value_Type) \
     typedef struct Node_##Key_Type##_##Value_Type Node_##Key_Type##_##Value_Type; \
@@ -51,6 +53,10 @@ DECLARE_HASHMAP(int, int)
 DECLARE_HASH_FUNCTION(int)
 DECLARE_COMPARE_KEYS(int)
 DECLARE_HASHMAP_CRUD_OPERATIONS(int, int)
+DECLARE_NODE(string_t, Array_float)
+DECLARE_NODE_ARRAY(string_t, Array_float)
+DECLARE_HASHMAP(string_t, Array_float)
+DECLARE_HASHMAP_CRUD_OPERATIONS(string_t, Array_float)
 
 // Declare non-macro functions
 size_t hash_function_string_t(const char *key, size_t capacity);

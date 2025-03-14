@@ -109,5 +109,7 @@
     }
 
 DEFINE_ARRAY(float)
+DEFINE_ARRAY(int)
+DEFINE_ARRAY(char)
 
 #endif 

@@ -1,3 +1,6 @@
+#ifndef HASHMAP_H
+#define HASHMAP_H
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -151,12 +154,8 @@ size_t hash_function_string(const char *key, size_t capacity) {
 
 DEFINE_NODE(int, int)
 DEFINE_ARRAY(int, int)
-DEFINE_HASHMAP(int, int)
 DEFINE_HASH_FUNCTION(int)
+DEFINE_HASHMAP(int, int)
 DEFINE_HASHMAP_CRUD_OPERATIONS(int, int)
      
-DEFINE_ARRAY(Node_char_int);
-
-DEFINE_HASHMAP(char, int);
-
 #endif 

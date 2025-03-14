@@ -167,10 +167,10 @@ void test_inverse_matrix() {
 
     if (inverse) {
         assert(inverse->size == 2);
-        assert(inverse->data[0]->data[0] == 0.6);
-        assert(inverse->data[0]->data[1] == -0.7);
-        assert(inverse->data[1]->data[0] == -0.2);
-        assert(inverse->data[1]->data[1] == 0.4);
+        assert(inverse->data[0]->data[0] == 0.6f);
+        assert(inverse->data[0]->data[1] == -0.7f);
+        assert(inverse->data[1]->data[0] == -0.2f);
+        assert(inverse->data[1]->data[1] == 0.4f);
 
         printf("Matrix inversion test passed!\n");
         free(inverse);

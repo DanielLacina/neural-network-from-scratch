@@ -4,7 +4,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-// Macro to define an array for a specific type
 #define DEFINE_ARRAY(TYPE)                                               \
     typedef struct {                                                     \
         TYPE *data;                                                      \
@@ -109,7 +108,6 @@
         free(arr);                                                       \
     }
 
-// Define the Array for float
 DEFINE_ARRAY(float)
 
-#endif // ARRAY_H
+#endif 

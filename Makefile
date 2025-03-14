@@ -22,8 +22,8 @@ TEST_MULTIDIM_OBJ = $(BUILD_DIR)/test_multidim_array.o
 TEST_HASHMAP_SRC = $(TEST_DIR)/test_hashmap.c
 TEST_HASHMAP_OBJ = $(BUILD_DIR)/test_hashmap.o
 
-# Source files for shared code (e.g., array.c, multidim_array.c, hashmap.c)
-SHARED_SRC = $(SRC_DIR)/array.c $(SRC_DIR)/multidim_array.c $(SRC_DIR)/hashmap.c
+# Source files for shared code (e.g., array.c, multidim_array.c, hashmap.c, csv_reader.c)
+SHARED_SRC = $(SRC_DIR)/array.c $(SRC_DIR)/multidim_array.c $(SRC_DIR)/hashmap.c $(SRC_DIR)/csv_reader.c
 SHARED_OBJ = $(patsubst $(SRC_DIR)/%.c, $(BUILD_DIR)/%.o, $(SHARED_SRC))
 
 # Main program executable
@@ -60,7 +60,7 @@ $(BUILD_DIR)/test_multidim_array.o: $(TEST_MULTIDIM_SRC) | $(BUILD_DIR)
 $(BUILD_DIR)/test_hashmap.o: $(TEST_HASHMAP_SRC) | $(BUILD_DIR)
 	$(CC) $(CFLAGS) -c $(TEST_HASHMAP_SRC) -o $@
 
-# Rule to compile shared source files (e.g., array.c, multidim_array.c, hashmap.c)
+# Rule to compile shared source files (e.g., array.c, multidim_array.c, hashmap.c, csv_reader.c)
 $(BUILD_DIR)/%.o: $(SRC_DIR)/%.c | $(BUILD_DIR)
 	$(CC) $(CFLAGS) -c $< -o $@
 
